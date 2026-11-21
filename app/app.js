@@ -6,17 +6,17 @@
 
 var SAMPLES = [
   { file: "samples/hero.jpg",    role: "THE DRIVER",  place: "CORAL BOULEVARD", time: "6:42 PM", note: "TOP DOWN, NO PLANS", fy: 0.55 },
-  { file: "samples/boss-new.jpg", role: "THE BOSS",    place: "PALM ROW",        time: "8:05 PM", note: "OWNS THE SKYLINE", fy: 0.38 },
+  { file: "samples/boss-new.jpg", role: "THE BOSS",    place: "PALM ROW",        time: "8:05 PM", note: "OWNS THE SKYLINE", fy: 0.30, zoom: 1.0 },
   { file: "samples/mechanic-new.jpg", role: "THE MECHANIC", place: "SUNSET GARAGE", time: "7:15 PM", note: "FIXES ANYTHING", fy: 0.42 },
   { file: "samples/captain-new.jpg", role: "THE CAPTAIN", place: "SANDS MARINA", time: "7:48 PM", note: "BOATS AND BAD IDEAS" },
-  { file: "samples/rider.jpg",   role: "THE RIDER",   place: "SANDS FREEWAY",   time: "7:05 PM", note: "NO BRAKES, NO REGRETS" },
-  { file: "samples/fixer-new.jpg", role: "THE FIXER",  place: "NEON ROW",        time: "9:30 PM", note: "EVERYTHING HAS A PRICE", fy: 0.40 },
-  { file: "samples/lookout.jpg", role: "THE LOOKOUT", place: "TOWER 9",         time: "6:10 PM", note: "LAST DIP OF THE DAY" },
+  { file: "samples/rider-new.jpg", role: "THE RIDER",   place: "SANDS FREEWAY",   time: "7:05 PM", note: "NO BRAKES, NO REGRETS", fy: 0.42 },
+  { file: "samples/fixer-new.jpg", role: "THE FIXER",  place: "NEON ROW",        time: "9:30 PM", note: "EVERYTHING HAS A PRICE", fy: 0.62 },
+  { file: "samples/lookout-new.jpg", role: "THE LOOKOUT", place: "TOWER 9",       time: "6:10 PM", note: "LAST DIP OF THE DAY", fy: 0.42 },
   { file: "samples/getaway.jpg", role: "THE GETAWAY", place: "MIST LAKE",       time: "6:10 AM", note: "NO WAKE, NO TRACE" }
 ];
 var ALT_PHOTOS = [
   "samples/alt-coast.jpg", "samples/alt-sea.jpg", "samples/alt-cliffs.jpg",
-  "samples/alt-city.jpg", "samples/rider.jpg", "samples/alt-swim.jpg"
+  "samples/alt-city.jpg", "samples/rider-new.jpg", "samples/alt-swim.jpg"
 ];
 var ALL_PHOTOS = SAMPLES.map(function (s) { return s.file; }).concat(ALT_PHOTOS);
 
@@ -82,7 +82,7 @@ var state = {
   vol: "VOL. 01",
   selected: 0,
   panels: SAMPLES.map(function (s, i) {
-    return { photo: s.file, role: s.role, place: s.place, time: s.time, note: s.note, fx: s.fx || 0.5, fy: s.fy || 0.42, zoom: 1.1, img: null };
+    return { photo: s.file, role: s.role, place: s.place, time: s.time, note: s.note, fx: s.fx || 0.5, fy: s.fy || 0.42, zoom: s.zoom || 1.1, img: null };
   })
 };
 
@@ -267,7 +267,8 @@ function drawOverlays(c, W, H, layout, useInk) {
     /* the title is the poster: bigger than v6 so it reads at a glance,
        the hero face stays clear above it (top row ends at 0.506 H) */
     var tSize = drawRetroTitle(c, state.title, W / 2, titleY, W * 0.125, W);
-    drawScript(c, state.subtitle, W / 2, titleY + tSize * 0.72, W * 0.036, W);
+    /* script sits just below the title, clear of the bottom-row faces */
+    drawScript(c, state.subtitle, W / 2, titleY + tSize * 0.80, W * 0.036, W);
     drawRibbon(c, W * 0.5 - Math.min(W * 0.34, 620 * u), titleY + tSize * 0.98, Math.min(W * 0.68, 1240 * u), Math.max(28, 44 * u), state.tagline, W);
   }
   /* starburst seal, bottom-right above the credits strip */
@@ -287,6 +288,9 @@ function drawOverlays(c, W, H, layout, useInk) {
   c.font = "400 " + cfs + "px \"Vice Sans\", sans-serif";
   c.textAlign = "center";
   c.fillText(credits, W * 0.47, stripY + stripH / 2);
+  /* barcode: black bars on a white plate, like a real poster */
+  c.fillStyle = "#f6ead9";
+  c.fillRect(W * 0.885, stripY + stripH * 0.18, W * 0.095, stripH * 0.52);
   drawBarcode(c, W * 0.885, stripY + stripH * 0.18, W * 0.095, stripH * 0.52);
   c.fillStyle = "#f6ead9";
   c.font = "400 " + Math.max(9, 12 * u) + "px \"Vice Sans\", sans-serif";
